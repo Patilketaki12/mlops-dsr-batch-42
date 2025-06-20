@@ -1,31 +1,27 @@
-#python version for docker image
-FROM python:3.12-slim
 
-##set the working dir in the conatiner
-WORKDIR /code  # code becomes parent dir for exiting repo
+# Python version for the Docker image
+FROM python:3.12-slim 
 
-# Copy the requirements file into the container at /app
+## Set the working directory in the container
+WORKDIR /code
+
+## Copy the requirements file into the container
 COPY ./requirements.txt /code/requirements.txt
 
-# Install the dependencies
-RUN pip install  -r /code/requirements.txt
+## Install the requirements.txt file
+RUN pip install -r /code/requirements.txt
 
-# Copy the code from app folder  into the container at /code
+# Copy the content of the app directory to /code/app in the container
 COPY ./app /code/app
 
-# Copy the rest of the application code into the container
-
-#set enviroment variable
+# Set the environment variables for wandb
 ENV WANDB_API_KEY=""
-ENV MODEL_PATH="" # model trained then need the version upadated    
-#ENV PORT=8080
-# Expose the port the app runs on
-#Expose $PORT
+ENV MODEL_PATH=""
+
 EXPOSE 8080
-#fastapi run app/main.py --port 8080 --host
-#CMD['fastapi', 'run', 'app/main.py', '--port', '8080']
+
+# Start the application using uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
-#CMD ["sh","-c","uvicorn.app.main:app --host 0.0.0.0 --port $PORT --reload"]
 
 
 
